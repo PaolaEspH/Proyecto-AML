@@ -1,0 +1,138 @@
+```{r}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(cowplot)
+
+trans <- read.csv("../res/alertas.csv")
+
+trans <- trans %>%
+  mutate(
+    fecha = as.Date(fecha),
+    ano  = year(fecha),
+    mes   = floor_date(fecha, "month")
+  )
+```
+
+# Key Performance Indicator
+## Total
+```{r}
+kpi_global <- trans %>%
+  summarise(
+    n_trx      = n(),
+    n_alertas  = sum(alerta),
+    tasa_alerta = n_alertas / n_trx
+  )
+kpi_global
+```
+
+## Por segmento
+```{r}
+kpi_segmento <- trans %>%
+  group_by(segmento) %>%
+  summarise(
+    n_trx      = n(),
+    n_alertas  = sum(alerta),
+    tasa_alerta = n_alertas / n_trx
+  ) %>%
+  arrange(desc(tasa_alerta))
+
+kpi_segmento
+
+```
+
+Las PYMES son las que más alertas generaron. Esto lleva a preguntarse si están inscritas correctamente, o si las reglas utilizadas son coherentes con lo que se espera.
+
+## Cuál regla
+```{r}
+kpi_regla <- trans %>%
+  filter(alerta) %>%
+  group_by(id_regla_principal) %>%
+  summarise(
+    n_alertas = n()
+  ) %>%
+  mutate(
+    prop = n_alertas / sum(n_alertas)
+  ) %>%
+  arrange(desc(prop))
+
+kpi_regla
+
+```
+
+Como la mayoría son por monto alto, puede ser que el umbral no sea correcto.
+
+# Gráficos
+## Alertas por mes
+```{r}
+alertas_mes <- trans %>%
+  group_by(mes) %>%
+  summarise(
+    n_trx     = n(),
+    n_alertas = sum(alerta),
+    tasa_alerta = n_alertas / n_trx
+  )
+
+ggplot(alertas_mes, aes(x = mes, y = n_alertas)) +
+  geom_col(fill = "#4A75A8") +
+  labs(
+    x = "Mes",
+    y = "Número de alertas",
+    title = "Alertas mensuales"
+  ) +
+  theme_cowplot()
+
+```
+## Por segmento
+```{r}
+alertas_segmento <- trans %>%
+  group_by(segmento) %>%
+  summarise(
+    n_trx     = n(),
+    n_alertas = sum(alerta),
+    tasa_alerta = n_alertas / n_trx
+  )
+
+ggplot(alertas_segmento, aes(x = reorder(segmento, -tasa_alerta), y = tasa_alerta, fill = segmento)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  scale_fill_manual(values = c(
+    "Personal"    = "#4C78A8",
+    "PYME"        = "#F58518",
+    "Corporativo" = "#54A24B"
+  )) +
+  labs(
+    x     = "Segmento",
+    y     = "% de transacciones con alerta",
+    title = "Tasa de alerta por segmento"
+  ) +
+  theme_cowplot()
+```
+
+## Por Regla
+```{r}
+ggplot(kpi_regla, aes(x = reorder(id_regla_principal, -prop), y = prop, fill = id_regla_principal)) +
+  geom_col(width = 0.7, show.legend = FALSE) +
+  scale_fill_manual(values = c(
+    "Monto_PEP"   = "#E45756",
+    "Monto_alto"  = "#4C78A8",
+    "Frecuencia"  = "#72B7B2",
+    "Sin alerta"  = "#A0A0A0",
+    "Otra"        = "#B279A2"
+  )) +
+  labs(
+    x     = "Regla principal",
+    y     = "% de alertas",
+    title = "Distribución de alertas por tipo de regla"
+  ) +
+  theme_cowplot()
+
+```
+
+# Guardar datos para dashboard y reporte
+```{r}
+write.csv(kpi_global,    "../res/kpi_global.csv",    row.names = FALSE)
+write.csv(kpi_segmento,  "../res/kpi_segmento.csv",  row.names = FALSE)
+write.csv(kpi_regla,     "../res/kpi_regla.csv",     row.names = FALSE)
+write.csv(alertas_mes,   "../res/alertas_mes.csv",   row.names = FALSE)
+```
+
