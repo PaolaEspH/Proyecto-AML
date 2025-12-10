@@ -1,0 +1,70 @@
+# Cargar bases
+```{r}
+clientes <- read.csv('../data/clientes.csv', row.names = 1)
+transacciones <- read.csv('../data/transacciones.csv', row.names = 1)
+transacciones <- transacciones %>% left_join(clientes, by = 'id_cliente')
+```
+
+# Reglas
+Se alertan las transacciones con:
+
+* Montos diarios mayores o iguales al salario mensual
+* Montos diarios mayores o iguales a 3000000
+* 5 o más transacciones en un día
+* Montos mayores o iguales al umbral por segmento: 500000 para cuentas personales, 1000000 para cuentas de PYME y PEP, 10000000 para corporativos.
+```{r}
+umbral_pep     <- 1000000   
+umbral_monto_diario <- 3000000
+umbral_trx_diarias  <- 5
+```
+
+# Aplicar
+```{r}
+alertas <- transacciones %>%
+  group_by(id_cliente, fecha) %>%
+  mutate(
+    trx_diarias  = n(),
+    monto_diario = sum(monto, na.rm = TRUE)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    # Umbral por segmento
+    umbral_segmento = case_when(
+      segmento == "Personal"    ~ 500000,
+      segmento == "PYME"        ~ 1000000,
+      segmento == "Corporativo" ~ 10000000,
+      TRUE                      ~ 500000   # No asignado, se trata como personal
+    ),
+    # Reglas
+    regla_monto_alto = monto >= umbral_segmento,
+    regla_salario = monto_diario >= ingreso_mensual,
+    regla_pep        = (es_pep == 1 & monto >= umbral_pep),
+    regla_frecuencia = (trx_diarias >= umbral_trx_diarias &
+                          monto_diario >= umbral_monto_diario),
+    num_reglas       = regla_monto_alto + regla_pep + regla_frecuencia,
+    alerta           = num_reglas > 0,
+    id_regla_principal = case_when(
+      !alerta              ~ "Sin alerta",
+      regla_pep            ~ "Monto_PEP",
+      regla_monto_alto     ~ "Monto_alto",
+      regla_salario        ~ "Salario",
+      regla_frecuencia     ~ "Frecuencia",
+      TRUE                 ~ "Otra"
+    )
+  )
+alertas
+```
+
+
+```{r}
+transacciones_aml <- alertas %>%
+  select(
+    id_trx, fecha, monto, moneda, canal, tipo_trx,
+    id_cliente, segmento, es_pep, ingreso_mensual,
+    trx_diarias, monto_diario,
+    alerta, id_regla_principal
+  )
+write.csv(transacciones_aml, file = '../res/alertas.csv')
+transacciones_aml %>% filter(alerta == TRUE)
+```
+
