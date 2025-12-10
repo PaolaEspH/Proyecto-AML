@@ -11,7 +11,7 @@ Se alertan las transacciones con:
 * Montos diarios mayores o iguales al salario mensual
 * Montos diarios mayores o iguales a 3000000
 * 5 o más transacciones en un día
-* Montos mayores o iguales al umbral por segmento: 500000 para cuentas personales, 1000000 para cuentas de PYME y PEP, 10000000 para corporativos.
+* Montos mayores o iguales al umbral por segmento: 800000 para cuentas personales, 1000000 para PEP, 1500000 para cuentas de PYME y 5000000 para corporativos.
 ```{r}
 umbral_pep     <- 1000000   
 umbral_monto_diario <- 3000000
@@ -30,10 +30,10 @@ alertas <- transacciones %>%
   mutate(
     # Umbral por segmento
     umbral_segmento = case_when(
-      segmento == "Personal"    ~ 500000,
-      segmento == "PYME"        ~ 1000000,
-      segmento == "Corporativo" ~ 10000000,
-      TRUE                      ~ 500000   # No asignado, se trata como personal
+      segmento == "Personal"    ~ 800000,
+      segmento == "PYME"        ~ 15000000,
+      segmento == "Corporativo" ~ 5000000,
+      TRUE                      ~ 800000   # No asignado, se trata como personal
     ),
     # Reglas
     regla_monto_alto = monto >= umbral_segmento,
@@ -41,7 +41,7 @@ alertas <- transacciones %>%
     regla_pep        = (es_pep == 1 & monto >= umbral_pep),
     regla_frecuencia = (trx_diarias >= umbral_trx_diarias &
                           monto_diario >= umbral_monto_diario),
-    num_reglas       = regla_monto_alto + regla_pep + regla_frecuencia,
+    num_reglas       = regla_monto_alto + regla_pep + regla_frecuencia + regla_salario,
     alerta           = num_reglas > 0,
     id_regla_principal = case_when(
       !alerta              ~ "Sin alerta",
@@ -61,7 +61,7 @@ transacciones_aml <- alertas %>%
   select(
     id_trx, fecha, monto, moneda, canal, tipo_trx,
     id_cliente, segmento, es_pep, ingreso_mensual,
-    trx_diarias, monto_diario,
+    trx_diarias, monto_diario, num_reglas,
     alerta, id_regla_principal
   )
 write.csv(transacciones_aml, file = '../res/alertas.csv')

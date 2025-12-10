@@ -115,9 +115,9 @@ ggplot(kpi_regla, aes(x = reorder(id_regla_principal, -prop), y = prop, fill = i
   scale_fill_manual(values = c(
     "Monto_PEP"   = "#E45756",
     "Monto_alto"  = "#4C78A8",
-    "Frecuencia"  = "#72B7B2",
+    "Frecuencia"  = "#B279A2",
     "Sin alerta"  = "#A0A0A0",
-    "Otra"        = "#B279A2"
+    "Salario"        = "#72B7B2"
   )) +
   labs(
     x     = "Regla principal",

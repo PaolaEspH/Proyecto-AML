@@ -28,13 +28,26 @@ clientes <- tibble(
   id_cliente = 1:n_clientes,
   provincia  = sample(provincias, n_clientes, replace = TRUE),
   segmento   = sample(segmentos, n_clientes, replace = TRUE,
-                      prob = c(0.7, 0.2, 0.1)),
-  es_pep     = rbinom(n_clientes, size = 1, prob = 0.03),  # 3% Persona expuesta políticamente
-  ingreso_mensual = round(
-    rlnorm(n_clientes, meanlog = log(600000), sdlog = 0.6),
-    -3
-  )
-)
+                      prob = c(0.7, 0.2, 0.1))
+) %>%
+  mutate(
+    es_pep = if_else(
+      segmento == "Personal",
+      rbinom(n(), size = 1, prob = 0.03),
+      0
+    ),
+    # Ingreso base distinto por segmento
+    ingreso_base = case_when(
+      segmento == "Personal"    ~ rlnorm(n(), meanlog = log(600000),  sdlog = 0.6),
+      segmento == "PYME"        ~ rlnorm(n(), meanlog = log(1200000), sdlog = 0.6),
+      segmento == "Corporativo" ~ rlnorm(n(), meanlog = log(4000000), sdlog = 0.7)
+    ),
+    # Factor PEP
+    factor_pep = if_else(es_pep == 1, 1.8, 1.0),
+    ingreso_mensual = round(ingreso_base * factor_pep, 0)
+  ) %>%
+  select(-ingreso_base, -factor_pep)
+
 ```
 
 ```{r}
@@ -51,12 +64,7 @@ transacciones <- tibble(
 ) %>%
   left_join(clientes, by = "id_cliente") %>%
   mutate( #montos coherentes
-    monto = case_when(
-      segmento == "Personal" ~ rlnorm(n(), log(150000), 0.8),
-      segmento == "PYME"     ~ rlnorm(n(), log(800000), 0.7),
-      segmento == "Corporativo" ~ rlnorm(n(), log(5000000), 0.6)
-    )
-  ) %>%
+    monto = rlnorm(n(), log(ingreso_mensual/10), 0.5)) %>%
   mutate( # crear outliers
     monto = monto * ifelse(runif(n()) < 0.01, runif(n(), 3, 15), 1)
   )
