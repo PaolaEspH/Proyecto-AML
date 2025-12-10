@@ -21,64 +21,216 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="Informe_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Informe_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="Informe_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="Informe_files/libs/quarto-html/popper.min.js"></script>
-<script src="Informe_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Informe_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Informe_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Informe_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Informe_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Informe_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Informe_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="informe_files/libs/clipboard/clipboard.min.js"></script>
+<script src="informe_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="informe_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="informe_files/libs/quarto-html/popper.min.js"></script>
+<script src="informe_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="informe_files/libs/quarto-html/anchor.min.js"></script>
+<link href="informe_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="informe_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="informe_files/libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="informe_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="informe_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="informe_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="informe_files/libs/bootstrap/bootstrap-813c323200a87c37e262811031999de4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="informe_files/libs/bootstrap/bootstrap-dark-1c59215f878e034bd7426c637fa661ac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="informe_files/libs/bootstrap/bootstrap-813c323200a87c37e262811031999de4.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="informe_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="informe_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
 
 
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#resumen" id="toc-resumen" class="nav-link active" data-scroll-target="#resumen">Resumen</a></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#metodología" id="toc-metodología" class="nav-link" data-scroll-target="#metodología">Metodología</a>
+  <ul class="collapse">
+  <li><a href="#simulación-de-datos" id="toc-simulación-de-datos" class="nav-link" data-scroll-target="#simulación-de-datos">Simulación de datos</a></li>
+  <li><a href="#modelo-aml" id="toc-modelo-aml" class="nav-link" data-scroll-target="#modelo-aml">Modelo AML</a></li>
+  </ul></li>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados">Resultados</a></li>
+  <li><a href="#conclusiones-y-recomendaciones" id="toc-conclusiones-y-recomendaciones" class="nav-link" data-scroll-target="#conclusiones-y-recomendaciones">Conclusiones y Recomendaciones</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="informe.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
 <main class="content" id="quarto-document-content">
+
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -145,42 +297,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Resultados</h1>
 <p>En total se identificaron 112 transacciones que activaron al menos una de las reglas de alerta definidas. La tabla de indicadores globales muestra el número total de operaciones analizadas, el número de alertas detectadas y la tasa de alertas resultante sobre el total de transacciones del periodo.</p>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 4
-  segmento    transacciones alertas `tasa de alertas`
-  &lt;chr&gt;               &lt;int&gt;   &lt;int&gt;             &lt;dbl&gt;
-1 Personal            14147      88           0.00622
-2 Corporativo          1850      10           0.00541
-3 PYME                 4003      14           0.00350
-4 Total               20000     112           0.0056 </code></pre>
+<div class="cell-output-display">
+<table class="table table-hover table-condensed caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Distribución de alertas por segmento</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">segmento</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">transacciones</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">alertas</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">tasa de alertas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Personal</td>
+<td style="text-align: right;">14147</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: left;">0.0062204</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Corporativo</td>
+<td style="text-align: right;">1850</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">0.0054054</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PYME</td>
+<td style="text-align: right;">4003</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: left;">0.0034974</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total</td>
+<td style="text-align: right;">20000</td>
+<td style="text-align: right;">112</td>
+<td style="text-align: left;">0.0056000</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>Al desagregar por segmento, la tabla de resultados indica que las cuentas personales registran el mayor número de alertas y la mayor tasa de alertas en relación con la cantidad de transacciones que realizan. Los segmentos corporativo y PYME presentan tanto un menor volumen de transacciones con alerta como tasas de alerta inferiores a las observadas en el segmento personal. La fila “Total” permite comparar estas tasas segmentadas con el comportamiento agregado de la cartera.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>kpi_regla <span class="ot">&lt;-</span> trans <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(alerta) <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id_regla_principal) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_alertas =</span> <span class="fu">n</span>()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop =</span> n_alertas <span class="sc">/</span> <span class="fu">sum</span>(n_alertas)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(prop)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'regla principal'</span> <span class="ot">=</span> id_regla_principal,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'alertas'</span> <span class="ot">=</span> n_alertas,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    proporción <span class="ot">=</span> prop</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>kpi_regla</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  `regla principal` alertas proporción
-  &lt;chr&gt;               &lt;int&gt;      &lt;dbl&gt;
-1 Monto_alto             58    0.518  
-2 Salario                53    0.473  
-3 Monto_PEP               1    0.00893</code></pre>
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Distribución de alertas por regla principal</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">regla principal</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">alertas</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">proporción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Monto_alto</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">0.5178571</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Salario</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">0.4732143</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Monto_PEP</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0089286</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>El resumen por regla principal muestra que la mayor parte de las alertas se explica por la regla asociada al umbral de monto máximo por segmento, seguida por la regla basada en el salario del cliente. La regla Monto_PEP aporta un número reducido de alertas en comparación con las anteriores, consistente con el hecho de que solo puede activarse para clientes personales marcados como PEP.</p>
@@ -188,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Informe_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="informe_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -206,6 +392,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {

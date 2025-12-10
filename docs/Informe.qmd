@@ -1,9 +1,21 @@
 ---
 title: "Proyecto AML simulado"
 author: "Paola Espinoza Hernández"
-format: html
+format:
+  html:
+    theme:
+      light: cosmo      
+      dark: darkly     
+    toc: true
+    toc-depth: 2
+    toc-location: right
+    toc-expand: true
+  pdf:
+    documentclass: article
 execute:
-  echo: true
+  echo: false
+  warning: false
+  message: false
 ---
 
 # Resumen
@@ -53,6 +65,8 @@ library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(cowplot)
+library(knitr)
+library(kableExtra)
 
 trans <- read.csv("../res/alertas.csv")
 
@@ -88,11 +102,34 @@ kpi_segmento <- trans %>%
     'tasa de alertas'  = tasa_alerta
   )
 
-kpi_segmento
+tabla <- kable(
+  kpi_segmento,
+  caption = "Distribución de alertas por segmento",
+  align   = c("l", "r", "r")
+)
+
+if (knitr::is_html_output()) {
+  tabla <- tabla %>%
+    kable_styling(
+      full_width        = FALSE,
+      bootstrap_options = c("hover", "condensed"),
+      position          = "center",
+      font_size         = 11
+    )
+} else if (knitr::is_latex_output()) {
+  tabla <- tabla %>%
+    kable_styling(
+      full_width = FALSE,
+      position   = "center",
+      font_size  = 9
+    )
+}
+
+tabla
 ```
 Al desagregar por segmento, la tabla de resultados indica que las cuentas personales registran el mayor número de alertas y la mayor tasa de alertas en relación con la cantidad de transacciones que realizan. Los segmentos corporativo y PYME presentan tanto un menor volumen de transacciones con alerta como tasas de alerta inferiores a las observadas en el segmento personal. La fila “Total” permite comparar estas tasas segmentadas con el comportamiento agregado de la cartera.
 
-```{r}
+```{r, echo = FALSE}
 kpi_regla <- trans %>%
   filter(alerta) %>%
   group_by(id_regla_principal) %>%
@@ -109,7 +146,30 @@ kpi_regla <- trans %>%
     proporción = prop
   )
 
-kpi_regla
+tabla_kpi_regla <- kable(
+  kpi_regla,
+  caption = "Distribución de alertas por regla principal",
+  align   = c("l", "r", "r")
+)
+
+if (knitr::is_html_output()) {
+  tabla_kpi_regla <- tabla_kpi_regla %>%
+    kable_styling(
+      full_width        = FALSE,
+      bootstrap_options = c("striped", "hover", "condensed"),
+      position          = "center",
+      font_size         = 11
+    )
+} else if (knitr::is_latex_output()) {
+  tabla_kpi_regla <- tabla_kpi_regla %>%
+    kable_styling(
+      full_width = FALSE,
+      position   = "center",
+      font_size  = 9
+    )
+}
+
+tabla_kpi_regla
 ```
 
 El resumen por regla principal muestra que la mayor parte de las alertas se explica por la regla asociada al umbral de monto máximo por segmento, seguida por la regla basada en el salario del cliente. La regla Monto_PEP aporta un número reducido de alertas en comparación con las anteriores, consistente con el hecho de que solo puede activarse para clientes personales marcados como PEP.
