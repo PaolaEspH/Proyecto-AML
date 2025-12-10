@@ -1,0 +1,75 @@
+```{r}
+set.seed(123)
+
+library(dplyr)
+library(lubridate)
+```
+
+```{r}
+# Parámetros
+n_clientes       <- 1000
+n_transacciones  <- 20000
+fecha_ini        <- as.Date("2024-01-01")
+fecha_fin        <- as.Date("2024-12-31")
+
+provincias <- c(
+  "San José", "Alajuela", "Cartago",
+  "Heredia", "Guanacaste", "Puntarenas", "Limón"
+)
+
+segmentos <- c("Personal", "PYME", "Corporativo")
+canales   <- c("Cajero", "Ventanilla", "Internet", "SINPE")
+tipos_trx <- c("Depósito", "Retiro", "Transferencia", "Pago")
+```
+
+```{r}
+# Simular clientes
+clientes <- tibble(
+  id_cliente = 1:n_clientes,
+  provincia  = sample(provincias, n_clientes, replace = TRUE),
+  segmento   = sample(segmentos, n_clientes, replace = TRUE,
+                      prob = c(0.7, 0.2, 0.1)),
+  es_pep     = rbinom(n_clientes, size = 1, prob = 0.03),  # 3% Persona expuesta políticamente
+  ingreso_mensual = round(
+    rlnorm(n_clientes, meanlog = log(600000), sdlog = 0.6),
+    -3
+  )
+)
+```
+
+```{r}
+fechas <- seq(fecha_ini, fecha_fin, by = "day")
+
+transacciones <- tibble(
+  id_trx    = 1:n_transacciones,
+  fecha     = sample(fechas, n_transacciones, replace = TRUE),
+  id_cliente= sample(clientes$id_cliente, n_transacciones, replace = TRUE),
+  canal     = sample(canales, n_transacciones, replace = TRUE),
+  tipo_trx  = sample(tipos_trx, n_transacciones, replace = TRUE),
+  moneda    = sample(c("CRC", "USD"), n_transacciones, replace = TRUE,
+                     prob = c(0.8, 0.2))
+) %>%
+  left_join(clientes, by = "id_cliente") %>%
+  mutate( #montos coherentes
+    monto = case_when(
+      segmento == "Personal" ~ rlnorm(n(), log(150000), 0.8),
+      segmento == "PYME"     ~ rlnorm(n(), log(800000), 0.7),
+      segmento == "Corporativo" ~ rlnorm(n(), log(5000000), 0.6)
+    )
+  ) %>%
+  mutate( # crear outliers
+    monto = monto * ifelse(runif(n()) < 0.01, runif(n(), 3, 15), 1)
+  )
+```
+
+```{r}
+# Crear dataframe de transacciones
+df_transacciones <- transacciones %>% select(-c('ingreso_mensual', 'provincia', 'segmento', 'es_pep'))
+```
+
+```{r}
+# Guardar bases
+write.csv(clientes, file = '../data/clientes.csv')
+write.csv(df_transacciones, file = '../data/transacciones.csv')
+```
+
