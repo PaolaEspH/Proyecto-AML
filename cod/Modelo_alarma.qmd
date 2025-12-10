@@ -57,6 +57,7 @@ alertas
 
 
 ```{r}
+write.csv(alertas, file = '../res/alertas.csv')
 transacciones_aml <- alertas %>%
   select(
     id_trx, fecha, monto, moneda, canal, tipo_trx,
@@ -64,7 +65,6 @@ transacciones_aml <- alertas %>%
     trx_diarias, monto_diario, num_reglas,
     alerta, id_regla_principal
   )
-write.csv(transacciones_aml, file = '../res/alertas.csv')
 transacciones_aml %>% filter(alerta == TRUE)
 ```
 

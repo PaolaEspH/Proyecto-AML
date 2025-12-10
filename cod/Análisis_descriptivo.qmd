@@ -19,6 +19,7 @@ trans <- trans %>%
 ```{r}
 kpi_global <- trans %>%
   summarise(
+    segmento    = "Total",
     n_trx      = n(),
     n_alertas  = sum(alerta),
     tasa_alerta = n_alertas / n_trx
@@ -35,13 +36,19 @@ kpi_segmento <- trans %>%
     n_alertas  = sum(alerta),
     tasa_alerta = n_alertas / n_trx
   ) %>%
-  arrange(desc(tasa_alerta))
+  arrange(desc(tasa_alerta)) %>% 
+  bind_rows(kpi_global) %>% 
+  rename(
+    transacciones = n_trx,
+    alertas       = n_alertas,
+    'tasa de alertas'  = tasa_alerta
+  )
 
 kpi_segmento
 
 ```
 
-Las PYMES son las que más alertas generaron. Esto lleva a preguntarse si están inscritas correctamente, o si las reglas utilizadas son coherentes con lo que se espera.
+Las cuentas personales son las que más alertas generaron. Esto lleva a preguntarse si las reglas utilizadas son coherentes con lo que se espera.
 
 ## Cuál regla
 ```{r}
@@ -54,7 +61,12 @@ kpi_regla <- trans %>%
   mutate(
     prop = n_alertas / sum(n_alertas)
   ) %>%
-  arrange(desc(prop))
+  arrange(desc(prop)) %>% 
+  rename(
+    'regla principal' = id_regla_principal,
+    'alertas' = n_alertas,
+    proporción = prop
+  )
 
 kpi_regla
 
@@ -122,7 +134,7 @@ ggplot(kpi_regla, aes(x = reorder(id_regla_principal, -prop), y = prop, fill = i
   labs(
     x     = "Regla principal",
     y     = "% de alertas",
-    title = "Distribución de alertas por tipo de regla"
+    title = "Distribución de alertas por tipo de regla principal"
   ) +
   theme_cowplot()
 

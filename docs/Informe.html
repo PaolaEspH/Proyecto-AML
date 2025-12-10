@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Paola Espinoza Hernández">
+
+<title>Proyecto AML simulado</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Informe_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Informe_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Informe_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Informe_files/libs/quarto-html/popper.min.js"></script>
+<script src="Informe_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Informe_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Informe_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Informe_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Informe_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Informe_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Informe_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Proyecto AML simulado</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Paola Espinoza Hernández </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="resumen" class="level1">
+<h1>Resumen</h1>
+<p>En este proyecto se construye un conjunto de datos sintético para analizar reglas de monitoreo transaccional orientadas a la prevención del lavado de dinero (AML). Se simulan 1000 clientes distribuidos entre las siete provincias de Costa Rica y los segmentos Personal, PYME y Corporativo, incorporando la condición de Persona Expuesta Políticamente (PEP) y niveles de ingreso mensual diferenciados por segmento y por condición PEP. A partir de estos clientes, se generan transacciones para el año 2024, con montos modelados mediante distribuciones lognormales vinculadas al salario. A partir de estos datos, se define un conjunto de reglas que marcan transacciones como sospechosas cuando se exceden ciertos umbrales de monto diario, frecuencia diaria o montos por segmento, incluyendo umbrales específicos para cuentas personales PEP. Las reglas se aplican con un orden de prioridad y el resultado se resume en una variable de regla principal, lo que permite calcular tasas de alerta globales y por segmento, así como la distribución de alertas por tipo de regla. El análisis muestra que se generan 112 alertas en el periodo simulado, concentradas en el segmento personal y dominadas por la regla de monto máximo por segmento, seguida por la regla basada en el salario mensual, mientras que la regla asociada a PEP aporta un número menor de casos. Estos resultados ilustran cómo el diseño de umbrales y reglas por segmento influye directamente en el número y composición de las alertas producidas.</p>
+<p><strong>Palabras clave:</strong> AML, lavado de dinero</p>
+</section>
+<section id="introducción" class="level1">
+<h1>Introducción</h1>
+<p>El presente proyecto utiliza datos simulados, disponibles en el <a href="https://github.com/PaolaEspH/Proyecto-AML">repositorio del proyecto</a>, de modo que dichos datos son de uso exclusivamente académico. El proyecto se enfoca en la creación de diversas reglas para la detección de patrones sospechosos, en el contexto de la prevención del lavado de dinero a través del monitoreo de transacciones.</p>
+<p>El enfoque consiste en construir un conjunto de datos sintético que permita controlar los supuestos de segmentación y comportamiento transaccional, y estudiar cómo distintas configuraciones de reglas afectan el volumen y la composición de las alertas generadas. Para ello se simulan 1000 clientes asignados aleatoriamente a las siete provincias de Costa Rica y a los segmentos Personal, PYME y Corporativo, incorporando un subconjunto de Personas Expuestas Políticamente (PEP) y niveles de ingreso mensual diferenciados por segmento y por condición PEP. Posteriormente se generan transacciones para el año 2024, definiendo para cada una un canal, un tipo de operación, la moneda, una fecha y un monto aleatorio relacionado con el salario del cliente.</p>
+<p>Una vez creado el conjunto de datos, se define un modelo de reglas AML basado en umbrales de monto diario, frecuencia diaria de transacciones y montos máximos por segmento y condición PEP. Estas reglas se aplican con un orden de prioridad para obtener, por transacción, la activación de alertas y la regla principal asociada. Finalmente, se calculan indicadores agregados por segmento y por tipo de regla, y se analizan los resultados en términos del número total de alertas, su distribución entre segmentos y la contribución relativa de cada regla, lo que permite evaluar el efecto de los parámetros definidos en la simulación sobre el patrón de alertas observado.</p>
+</section>
+<section id="metodología" class="level1">
+<h1>Metodología</h1>
+<section id="simulación-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="simulación-de-datos">Simulación de datos</h2>
+<section id="clientes" class="level3">
+<h3 class="anchored" data-anchor-id="clientes">Clientes</h3>
+<p>Se simularon 1000 clientes, asignados aleatoriamente mediante la función <code>sample</code> entre las siete provincias de Costa Rica y los segmentos Personal, PYME y Corporativo. Adicionalmente, se incorpora la condición de Persona Expuesta Políticamente (PEP) para un subconjunto de clientes, dada su relevancia en el contexto AML. La asignación de salarios se realiza mediante valores aleatorios provenientes de distribuciones lognormales con medias de 600 000, 1 200 000 y 4 000 000, de acuerdo con el segmento al que pertenece cada cliente. En el caso de los clientes PEP, el ingreso mensual se obtiene multiplicando el salario base por un factor de 1.8.</p>
+</section>
+<section id="transacciones" class="level3">
+<h3 class="anchored" data-anchor-id="transacciones">Transacciones</h3>
+<p>Para la simulación de las transacciones se asigna, a cada operación, un canal entre “Cajero”, “Ventanilla”, “Internet” y “SINPE”; un tipo de transacción entre “Depósito”, “Retiro”, “Transferencia” y “Pago”; la moneda de la operación (dólares o colones); y una fecha dentro del año 2024. Los montos se generan a partir de distribuciones lognormales cuya media corresponde aproximadamente a una décima parte del salario mensual del cliente asociado.</p>
+</section>
+</section>
+<section id="modelo-aml" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-aml">Modelo AML</h2>
+<p>Una vez creados los datos, se definen los siguientes umbrales para marcar una transacción como sospechosa:</p>
+<ul>
+<li>Montos diarios mayores o iguales al salario mensual.</li>
+<li>Montos diarios mayores o iguales a 3 000 000.</li>
+<li>Cinco o más transacciones en un mismo día.</li>
+<li>Montos mayores o iguales al umbral por segmento: 800 000 para cuentas personales, 1 000 000 para PEP, 1 500 000 para cuentas PYME y 5 000 000 para cuentas corporativas.</li>
+</ul>
+<p>Adicionalmente, se genera un archivo <code>.csv</code> que incluye la variable <code>id_regla_principal</code>, en la cual se establece un orden de prioridades entre las reglas: primero el umbral por monto, luego el umbral por salario y, finalmente, el umbral por frecuencia (monto y frecuencia diarios). En consecuencia, si una transacción sobrepasa el umbral de monto, se clasifica únicamente por esa regla, aunque también exceda el umbral de salario. Sin embargo, el archivo <code>alertas.csv</code> permite identificar cuántos y cuáles de los umbrales se sobrepasan en cada transacción marcada.</p>
+</section>
+</section>
+<section id="resultados" class="level1">
+<h1>Resultados</h1>
+<p>En total se identificaron 112 transacciones que activaron al menos una de las reglas de alerta definidas. La tabla de indicadores globales muestra el número total de operaciones analizadas, el número de alertas detectadas y la tasa de alertas resultante sobre el total de transacciones del periodo.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  segmento    transacciones alertas `tasa de alertas`
+  &lt;chr&gt;               &lt;int&gt;   &lt;int&gt;             &lt;dbl&gt;
+1 Personal            14147      88           0.00622
+2 Corporativo          1850      10           0.00541
+3 PYME                 4003      14           0.00350
+4 Total               20000     112           0.0056 </code></pre>
+</div>
+</div>
+<p>Al desagregar por segmento, la tabla de resultados indica que las cuentas personales registran el mayor número de alertas y la mayor tasa de alertas en relación con la cantidad de transacciones que realizan. Los segmentos corporativo y PYME presentan tanto un menor volumen de transacciones con alerta como tasas de alerta inferiores a las observadas en el segmento personal. La fila “Total” permite comparar estas tasas segmentadas con el comportamiento agregado de la cartera.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>kpi_regla <span class="ot">&lt;-</span> trans <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(alerta) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id_regla_principal) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_alertas =</span> <span class="fu">n</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop =</span> n_alertas <span class="sc">/</span> <span class="fu">sum</span>(n_alertas)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(prop)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'regla principal'</span> <span class="ot">=</span> id_regla_principal,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'alertas'</span> <span class="ot">=</span> n_alertas,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    proporción <span class="ot">=</span> prop</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>kpi_regla</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  `regla principal` alertas proporción
+  &lt;chr&gt;               &lt;int&gt;      &lt;dbl&gt;
+1 Monto_alto             58    0.518  
+2 Salario                53    0.473  
+3 Monto_PEP               1    0.00893</code></pre>
+</div>
+</div>
+<p>El resumen por regla principal muestra que la mayor parte de las alertas se explica por la regla asociada al umbral de monto máximo por segmento, seguida por la regla basada en el salario del cliente. La regla Monto_PEP aporta un número reducido de alertas en comparación con las anteriores, consistente con el hecho de que solo puede activarse para clientes personales marcados como PEP.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Informe_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El gráfico de alertas por segmento y tipo de regla confirma estos patrones: en el segmento personal se observan alertas para las tres reglas consideradas, mientras que en el segmento corporativo solo se activan las reglas de Monto_alto y Salario, y en el segmento PYME las alertas corresponden únicamente a la regla basada en el salario. En conjunto, estos resultados indican que, bajo los supuestos de simulación utilizados, la combinación de segmento y regla define perfiles de alerta diferenciados entre cuentas personales, corporativas y PYME.</p>
+</section>
+<section id="conclusiones-y-recomendaciones" class="level1">
+<h1>Conclusiones y Recomendaciones</h1>
+<p>Los resultados muestran que el sistema de reglas genera 112 alertas en el periodo analizado. La comparación entre el total y los segmentos, indica que las cuentas personales concentran tanto el mayor volumen de alertas como la mayor tasa de alerta respecto del número de transacciones que realizan. Además, al descomponer las alertas por tipo de regla, se observa que la mayor parte se origina en la regla asociada al umbral de monto máximo por segmento, seguida por la regla basada en el ingreso mensual del cliente.</p>
+<p>La distribución conjunta por segmento y regla confirma que las cuentas personales son el único segmento en el que se activan las tres reglas consideradas, mientras que en el segmento corporativo solo se observan alertas por Monto_alto y Salario, y en el segmento PYME únicamente por la regla de Salario. Esto indica que la combinación de segmento y tipo de regla determina patrones de alerta diferenciados dentro de la cartera. Por tanto, estos resultados indican que el diseño de los umbrales y de las reglas por segmento tiene un efecto directo sobre el volumen y la composición de las alertas generadas.</p>
+<p>A partir de estos resultados, un siguiente paso natural sería revisar la calibración de las reglas y umbrales utilizados en la simulación, en particular la regla de monto máximo por segmento y la regla basada en el salario, dado que explican la mayor parte de las alertas detectadas. Además, podría estudiarse con mayor detalle el comportamiento de la regla Monto_PEP, verificando bajo qué configuraciones de parámetros comienza a generar un nivel de alertas más relevante en relación con su población objetivo. Sobre esta base, el ejercicio puede extenderse mediante nuevas rondas de simulación con distintos supuestos, la incorporación de variables adicionales como historial transaccional o características geográficas.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
