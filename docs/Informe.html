@@ -8,7 +8,7 @@
 
 <meta name="author" content="Paola Espinoza Hernández">
 
-<title>Proyecto AML simulado</title>
+<title>Simulación y análisis de alertas transaccionales</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -234,7 +234,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Proyecto AML simulado</h1>
+<h1 class="title">Simulación y análisis de alertas transaccionales</h1>
 </div>
 
 
@@ -260,7 +260,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="resumen" class="level1">
 <h1>Resumen</h1>
 <p>En este proyecto se construye un conjunto de datos sintético para analizar reglas de monitoreo transaccional orientadas a la prevención del lavado de dinero (AML). Se simulan 1000 clientes distribuidos entre las siete provincias de Costa Rica y los segmentos Personal, PYME y Corporativo, incorporando la condición de Persona Expuesta Políticamente (PEP) y niveles de ingreso mensual diferenciados por segmento y por condición PEP. A partir de estos clientes, se generan transacciones para el año 2024, con montos modelados mediante distribuciones lognormales vinculadas al salario. A partir de estos datos, se define un conjunto de reglas que marcan transacciones como sospechosas cuando se exceden ciertos umbrales de monto diario, frecuencia diaria o montos por segmento, incluyendo umbrales específicos para cuentas personales PEP. Las reglas se aplican con un orden de prioridad y el resultado se resume en una variable de regla principal, lo que permite calcular tasas de alerta globales y por segmento, así como la distribución de alertas por tipo de regla. El análisis muestra que se generan 112 alertas en el periodo simulado, concentradas en el segmento personal y dominadas por la regla de monto máximo por segmento, seguida por la regla basada en el salario mensual, mientras que la regla asociada a PEP aporta un número menor de casos. Estos resultados ilustran cómo el diseño de umbrales y reglas por segmento influye directamente en el número y composición de las alertas producidas.</p>
-<p><strong>Palabras clave:</strong> AML, lavado de dinero</p>
+<p><strong>Palabras clave:</strong> AML, lavado de dinero, monitoreo transaccional, reglas de alerta, simulación de datos, segmentación de clientes, detección de anomalías.</p>
 </section>
 <section id="introducción" class="level1">
 <h1>Introducción</h1>

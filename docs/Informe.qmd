@@ -1,5 +1,5 @@
 ---
-title: "Proyecto AML simulado"
+title: "Simulación y análisis de alertas transaccionales"
 author: "Paola Espinoza Hernández"
 format:
   html:
@@ -12,6 +12,8 @@ format:
     toc-expand: true
   pdf:
     documentclass: article
+    fontsize: 12pt         
+    linestretch: 1.2       
 execute:
   echo: false
   warning: false
@@ -22,7 +24,7 @@ execute:
 
 En este proyecto se construye un conjunto de datos sintético para analizar reglas de monitoreo transaccional orientadas a la prevención del lavado de dinero (AML). Se simulan 1000 clientes distribuidos entre las siete provincias de Costa Rica y los segmentos Personal, PYME y Corporativo, incorporando la condición de Persona Expuesta Políticamente (PEP) y niveles de ingreso mensual diferenciados por segmento y por condición PEP. A partir de estos clientes, se generan transacciones para el año 2024, con montos modelados mediante distribuciones lognormales vinculadas al salario. A partir de estos datos, se define un conjunto de reglas que marcan transacciones como sospechosas cuando se exceden ciertos umbrales de monto diario, frecuencia diaria o montos por segmento, incluyendo umbrales específicos para cuentas personales PEP. Las reglas se aplican con un orden de prioridad y el resultado se resume en una variable de regla principal, lo que permite calcular tasas de alerta globales y por segmento, así como la distribución de alertas por tipo de regla. El análisis muestra que se generan 112 alertas en el periodo simulado, concentradas en el segmento personal y dominadas por la regla de monto máximo por segmento, seguida por la regla basada en el salario mensual, mientras que la regla asociada a PEP aporta un número menor de casos. Estos resultados ilustran cómo el diseño de umbrales y reglas por segmento influye directamente en el número y composición de las alertas producidas.
 
-**Palabras clave:** AML, lavado de dinero
+**Palabras clave:** AML, lavado de dinero, monitoreo transaccional, reglas de alerta, simulación de datos, segmentación de clientes, detección de anomalías.
 
 # Introducción
 
